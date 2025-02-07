@@ -119,12 +119,12 @@ function showResult() {
 }
 
 const lipTintLinks = {
-    "coral_crush": { "name": "Coral Crush", "url": "#", "img": "coral_crush.jpg" },
-    "toasted_chili": { "name": "Toasted Chili", "url": "#", "img": "toasted_chili.jpg" },
-    "sunset_babe": { "name": "Sunset Babe", "url": "#", "img": "sunset_babe.jpg" },
-    "cherry_red": { "name": "Cherry Red", "url": "#", "img": "cherry_red.jpg" },
-    "caramel_latte": { "name": "Caramel Latte", "url": "#", "img": "caramel_latte.jpg" },
-    "raspberry_jam": { "name": "Raspberry Jam", "url": "#", "img": "raspberry_jam.jpg" }
+    "coral_crush": { "name": "Coral Crush", "url": "https://www.venicebeauty.de/produkt/lip-tint-tattoo-effect-2/", "img": "https://www.venicebeauty.de/wp-content/uploads/2023/12/Lip-Tint_Corral-Crush_2-1024x1024.jpg" },
+    "toasted_chili": { "name": "Toasted Chili", "url": "https://www.venicebeauty.de/produkt/lip-tint-tattoo-effect-2/", "img": "https://www.venicebeauty.de/wp-content/uploads/2023/12/Lip-Tint_Toasted-Chilli_2-1024x1024.jpg" },
+    "sunset_babe": { "name": "Sunset Babe", "url": "https://www.venicebeauty.de/produkt/lip-tint-tattoo-effect-2/", "img": "https://www.venicebeauty.de/wp-content/uploads/2024/03/Lip-Tint_Sunset-Babe_2-1024x1024.jpg" },
+    "cherry_red": { "name": "Cherry Red", "url": "https://www.venicebeauty.de/produkt/lip-tint-tattoo-effect-2/", "img": "https://www.venicebeauty.de/wp-content/uploads/2024/03/Lip-Tint_Cherry-Red_2-1024x1024.jpg" },
+    "caramel_latte": { "name": "Caramel Latte", "url": "https://www.venicebeauty.de/produkt/lip-tint-tattoo-effect-2/", "img": "https://www.venicebeauty.de/wp-content/uploads/2024/05/lip-tint-caramel-latte-1024x1024.jpg" },
+    "raspberry_jam": { "name": "Raspberry Jam", "url": "https://www.venicebeauty.de/produkt/lip-tint-tattoo-effect-2/", "img": "https://www.venicebeauty.de/wp-content/uploads/2023/12/lip-tint-raspberry-jam-1-1024x1024.jpg" }
 };
 
 function saveToGoogleSheet(recommendedTints) {
