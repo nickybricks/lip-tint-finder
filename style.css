@@ -24,21 +24,30 @@ body {
     width: 100%;
     padding: 10px;
     margin: 5px 0;
-    background-color: #ff6b81;
-    color: white;
+    background-color: #fffce4;
+    color: #ffaac3;
+    font-weight: 600;
     border: none;
     border-radius: 5px;
     cursor: pointer;
 }
 
 .options button:hover {
-    background-color: #ff4757;
+    background-color: none;
 }
 
 .navigation {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     margin-top: 20px;
+}
+
+#back-button {
+    margin-right: auto;
+}
+
+#next-button {
+    margin-left: 10px;
 }
 
 .navigation button, .restart-button {
@@ -79,7 +88,8 @@ body {
 }
 
 .selected {
-    background-color: #323232 !important;
+    border: 3px solid #ffaac3 !important; /* Farbe der Umrandung */
+    border-radius: 5px; /* Abgerundete Ecken */
 }
 
 #restart-button {
