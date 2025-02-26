@@ -13,40 +13,41 @@ const questions = [
     { 
         text: "Wie würdest du deinen Hautton beschreiben?", 
         options: { 
-            "Sehr hell bis hell mit kühlen Untertönen": "coral_crush", 
-            "Mittel mit neutralen Untertönen": "toasted_chili", 
-            "Oliv bis gebräunt mit warmen Untertönen": "caramel_latte", 
-            "Dunkel mit warmen oder neutralen Untertönen": "cherry_red" 
+            "Sehr hell bis hell mit kühlen Untertönen": ["coral_crush", "raspberry_jam"], 
+            "Mittel mit neutralen Untertönen": ["toasted_chili", "sunset_babe"], 
+            "Oliv bis gebräunt mit warmen Untertönen": ["caramel_latte", "toasted_chili"], 
+            "Dunkel mit warmen oder neutralen Untertönen": ["cherry_red", "raspberry_jam"]
         } 
     },
     { 
         text: "Welche Augenfarbe hast du?", 
         options: { 
-            "Blau oder Grau": "coral_crush", 
-            "Grün oder Haselnuss": "sunset_babe", 
-            "Braun": "caramel_latte", 
-            "Dunkelbraun oder Schwarz": "cherry_red" 
+            "Blau oder Grau": ["coral_crush", "raspberry_jam"], 
+            "Grün oder Haselnuss": ["sunset_babe", "toasted_chili"], 
+            "Braun": ["caramel_latte", "cherry_red"], 
+            "Dunkelbraun oder Schwarz": ["cherry_red", "raspberry_jam"]
         } 
     },
     { 
         text: "Wie würdest du deinen Stil beschreiben?", 
         options: { 
-            "Natürlich & dezent": "coral_crush", 
-            "Klassisch & elegant": "toasted_chili", 
-            "Mutig & auffällig": "cherry_red", 
-            "Verspielt & romantisch": "sunset_babe" 
+            "Natürlich & dezent": ["coral_crush", "sunset_babe"], 
+            "Klassisch & elegant": ["toasted_chili", "caramel_latte"], 
+            "Mutig & auffällig": ["cherry_red", "raspberry_jam"], 
+            "Verspielt & romantisch": ["sunset_babe", "coral_crush"]
         } 
     },
     { 
         text: "Wofür trägst du am liebsten Lip Tints?", 
         options: { 
-            "Für den Alltag – easy und unkompliziert": "coral_crush", 
-            "Für besondere Anlässe": "toasted_chili", 
-            "Um ein Statement zu setzen": "cherry_red", 
-            "Für Dates oder Treffen mit Freunden": "raspberry_jam" 
+            "Für den Alltag – easy und unkompliziert": ["coral_crush", "sunset_babe"], 
+            "Für besondere Anlässe": ["toasted_chili", "caramel_latte"], 
+            "Um ein Statement zu setzen": ["cherry_red", "raspberry_jam"], 
+            "Für Dates oder Treffen mit Freunden": ["raspberry_jam", "sunset_babe"]
         } 
     }
 ];
+
 
 function renderQuestion() {
     const questionData = questions[currentQuestion];
@@ -63,15 +64,26 @@ function renderQuestion() {
     document.getElementById("back-button").style.display = currentQuestion > 0 ? "block" : "none";
 }
 
-function selectAnswer(button, answerKey) {
+function selectAnswer(button, answerKeys) {
     document.querySelectorAll(".options button").forEach(btn => btn.classList.remove("selected"));
     button.classList.add("selected");
-    answers[currentQuestion] = { key: answerKey, text: button.innerText };
+
+    // Speichere alle empfohlenen Farben
+    answers[currentQuestion] = { keys: answerKeys, text: button.innerText };
+
+    // Erhöhe Punkte für alle empfohlenen Farben
+    answerKeys.forEach(key => {
+        scores[key] += 1;
+    });
 }
+
 
 function nextQuestion() {
     if (answers[currentQuestion]) {
-        scores[answers[currentQuestion].key] += 1;
+        answers[currentQuestion].keys.forEach(key => {
+            scores[key] += 1;  // Erhöhe die Punktzahl für ALLE empfohlenen Farben
+        });
+
         currentQuestion++;
         if (currentQuestion < questions.length) {
             renderQuestion();
@@ -83,6 +95,7 @@ function nextQuestion() {
     }
 }
 
+
 function previousQuestion() {
     if (currentQuestion > 0) {
         currentQuestion--;
@@ -91,7 +104,28 @@ function previousQuestion() {
 }
 
 function showResult() {
-    let bestTints = Object.entries(scores).sort((a, b) => b[1] - a[1]).slice(0, 2);
+    // Sortiere die Farben nach Punktzahl (höchste zuerst)
+    let sortedTints = Object.entries(scores)
+        .filter(([key, value]) => value > 0) // Entferne Farben mit 0 Punkten
+        .sort((a, b) => b[1] - a[1]);
+
+    // Falls keine Farben eine Punktzahl haben, wähle zwei zufällig
+    if (sortedTints.length === 0) {
+        sortedTints = Object.entries(scores).sort(() => Math.random() - 0.5).slice(0, 2);
+    }
+
+    // Stelle sicher, dass IMMER zwei Farben empfohlen werden
+    let bestTints = sortedTints.slice(0, 2);
+
+    // Falls es nur eine Farbe gibt, wähle eine Backup-Farbe
+    if (bestTints.length < 2) {
+        let backupTints = Object.entries(scores)
+            .filter(([key]) => !bestTints.some(([selectedKey]) => selectedKey === key))
+            .sort(() => Math.random() - 0.5);
+        if (backupTints.length > 0) {
+            bestTints.push(backupTints[0]);
+        }
+    }
 
     let resultHTML = "<p>Danke für deine Antworten! Deine empfohlenen Lip Tints:</p><div class='set-container'>";
 
@@ -104,8 +138,6 @@ function showResult() {
                                 <p>${tint.name}</p>
                             </a>
                           </div>`;
-        } else {
-            resultHTML += `<div class='set'><p>Standard Lip Tint</p></div>`;
         }
     });
 
@@ -114,9 +146,17 @@ function showResult() {
     document.getElementById("result").style.display = "block";
     document.getElementById("result").innerHTML = resultHTML;
 
+    // Speichert die Ergebnisse in Google Sheets
     saveToGoogleSheet(bestTints.map(tint => tint[0]));
+
     document.getElementById("restart-button").style.display = "block";
 }
+
+
+
+
+
+
 
 const lipTintLinks = {
     "coral_crush": { 
@@ -150,6 +190,7 @@ const lipTintLinks = {
         "img": "https://www.venicebeauty.de/wp-content/uploads/2023/12/lip-tint-raspberry-jam-1-1024x1024.jpg" 
     }
 };
+
 
 function saveToGoogleSheet(recommendedTints) {
     const dataToSend = {
